@@ -84,7 +84,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ shopId, shopName, currentPendin
   const formatCurrency = (amount: number) => `₹${amount.toLocaleString()}`;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full max-w-full overflow-x-hidden">
       {/* Header */}
       <div className="p-4 border-b border-gray-200 bg-gray-50">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">Payment Entry</h3>

@@ -102,7 +102,7 @@ const ShopDetail: React.FC<ShopDetailProps> = ({ shop }) => {
   const formatCurrency = (amount: number) => `₹${amount.toLocaleString()}`;
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">
       {/* Shop header */}
       <div className="p-4 border-b border-gray-200 bg-gray-50">
         <h2 className="text-xl font-bold text-gray-900">{shop.name}</h2>
@@ -121,8 +121,8 @@ const ShopDetail: React.FC<ShopDetailProps> = ({ shop }) => {
       </div>
 
       {/* Tab navigation */}
-      <div className="border-b border-gray-200">
-        <div className="flex overflow-x-auto">
+      <div className="border-b border-gray-200 w-full">
+        <div className="flex overflow-x-auto w-full">
           {tabs.map((tab) => (
             <button
               key={tab.id}

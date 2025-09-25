@@ -22,10 +22,10 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMenuOpen }) => {
   const formatCurrency = (amount: number) => `₹${amount.toLocaleString()}`;
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-40 w-full max-w-full overflow-hidden">
       {/* Main header bar */}
-      <div className="px-4 py-3">
-        <div className="flex items-center justify-between">
+      <div className="px-4 py-3 w-full">
+        <div className="flex items-center justify-between w-full min-w-0">
           {/* Left: Hamburger menu + Business name */}
           <div className="flex items-center space-x-3">
             <button
@@ -72,8 +72,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuToggle, isMenuOpen }) => {
       </div>
 
       {/* Summary chips */}
-      <div className="px-4 pb-3">
-        <div className="grid grid-cols-2 gap-2">
+      <div className="px-4 pb-3 w-full overflow-hidden">
+        <div className="grid grid-cols-2 gap-2 w-full">
           {/* Delivered */}
           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
             <div className="flex items-center justify-between">

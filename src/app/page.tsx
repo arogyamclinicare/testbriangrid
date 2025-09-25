@@ -26,7 +26,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col w-full max-w-full overflow-x-hidden">
       {/* Header */}
       <Header
         onMenuToggle={handleMenuToggle}
@@ -34,7 +34,7 @@ export default function Home() {
       />
 
       {/* Main content area */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex w-full max-w-full overflow-x-hidden">
         {/* Shops Panel */}
         <ShopsPanel
           isOpen={isMenuOpen}
