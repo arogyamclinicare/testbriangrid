@@ -1,0 +1,169 @@
+'use client';
+
+import { useState } from 'react';
+import { useDeliveryStore } from '@/stores/deliveryStore';
+import { getAllProducts } from '@/lib/utils/calculations';
+import { DeliveryService, SaveDeliveryRequest } from '@/lib/services/deliveryService';
+import { PaymentService } from '@/lib/services/paymentService';
+import { useWhatsAppShare } from '@/hooks/useWhatsAppShare';
+import ProductRow from './ProductRow';
+import LiveTotals from './LiveTotals';
+import Button from '@/components/ui/Button';
+import SharePrompt from '@/components/sharing/SharePrompt';
+
+interface DeliveryTabProps {
+  shopId?: string;
+  shopName?: string;
+}
+
+const DeliveryTab: React.FC<DeliveryTabProps> = ({ shopId, shopName }) => {
+  const { items, calculation, clearAll, hasItems } = useDeliveryStore();
+  const { shareDelivery } = useWhatsAppShare();
+  const products = getAllProducts();
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSharePrompt, setShowSharePrompt] = useState(false);
+  const [pendingAfterAmount, setPendingAfterAmount] = useState(0);
+
+  const handleClearAll = () => {
+    if (confirm('Are you sure you want to clear all items?')) {
+      clearAll();
+    }
+  };
+
+  const handleSaveAndShare = async () => {
+    if (!shopId || !shopName || !hasItems) return;
+
+    setIsSaving(true);
+
+    try {
+      // Calculate pending amount after this delivery
+      const currentPending = await PaymentService.getOutstandingBalance(shopId);
+      const newPending = currentPending + calculation.grandTotal;
+      setPendingAfterAmount(newPending);
+
+      // Save delivery to database
+      const deliveryRequest: SaveDeliveryRequest = {
+        shopId,
+        date: new Date().toISOString().split('T')[0]!,
+        items,
+      };
+
+      const saveResult = await DeliveryService.saveDelivery(deliveryRequest);
+
+      if (saveResult.success) {
+        setShowSharePrompt(true);
+      } else {
+        alert(`Failed to save delivery: ${saveResult.error}`);
+      }
+    } catch (error) {
+      console.error('Error saving delivery:', error);
+      alert('Failed to save delivery. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleShareComplete = async () => {
+    if (shopId && shopName) {
+      // Convert items object to array format for sharing
+      const itemsArray = Object.values(items).map(item => ({
+        productId: item.productId,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      const shareResult = await shareDelivery({
+        shopName,
+        date: new Date().toISOString().split('T')[0]!,
+        items: itemsArray,
+        totalAmount: calculation.grandTotal,
+        pendingAfter: pendingAfterAmount,
+      });
+
+      console.log('Share result:', shareResult);
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="p-4 border-b border-gray-200 bg-gray-50">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Delivery Entry</h3>
+        <p className="text-sm text-gray-600">
+          Enter quantities for each product. Totals update automatically.
+        </p>
+
+        {hasItems && (
+          <div className="mt-3 flex justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClearAll}
+              className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400"
+            >
+              Clear All
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Products list */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4 space-y-3">
+          {products.map((product) => (
+            <ProductRow key={product.id} productId={product.id} />
+          ))}
+        </div>
+      </div>
+
+      {/* Sticky totals footer */}
+      <LiveTotals isSticky />
+
+      {/* Bottom action bar */}
+      <div className="border-t border-gray-200 bg-white p-4">
+        <div className="flex space-x-3">
+          <Button
+            variant="outline"
+            size="touch"
+            onClick={() => console.log('Save Draft')}
+          >
+            Save Draft
+          </Button>
+          <Button
+            variant="primary"
+            size="touch"
+            onClick={handleSaveAndShare}
+            disabled={!hasItems || isSaving}
+            loading={isSaving}
+          >
+            {isSaving ? 'Saving...' : 'Save & Share'}
+          </Button>
+        </div>
+      </div>
+
+      {/* Share prompt */}
+      <SharePrompt
+        isOpen={showSharePrompt}
+        onClose={() => setShowSharePrompt(false)}
+        type="delivery"
+        onComplete={handleShareComplete}
+        deliveryData={shopId && shopName ? {
+          shopName,
+          date: new Date().toISOString().split('T')[0]!,
+          items: Object.values(items).map(item => ({
+            productId: item.productId,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          totalAmount: calculation.grandTotal,
+          pendingAfter: pendingAfterAmount,
+        } : undefined}
+      />
+    </div>
+  );
+};
+
+export default DeliveryTab;
