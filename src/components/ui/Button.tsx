@@ -26,20 +26,20 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95 hover:scale-105';
     
     const variantClasses = {
-      primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 active:bg-primary-800',
-      secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500 active:bg-gray-300',
-      outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-gray-500 active:bg-gray-100',
-      ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500 active:bg-gray-200',
+      primary: 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-lg hover:shadow-xl hover:from-primary-700 hover:to-primary-800 focus:ring-primary-500 active:from-primary-800 active:to-primary-900',
+      secondary: 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 shadow-md hover:shadow-lg hover:from-gray-200 hover:to-gray-300 focus:ring-gray-500 active:from-gray-300 active:to-gray-400',
+      outline: 'border-2 border-primary-300 bg-white text-primary-700 shadow-md hover:shadow-lg hover:bg-primary-50 hover:border-primary-400 focus:ring-primary-500 active:bg-primary-100',
+      ghost: 'text-primary-700 hover:bg-primary-50 focus:ring-primary-500 active:bg-primary-100 shadow-sm hover:shadow-md',
     };
 
     const sizeClasses = {
-      sm: 'px-3 py-2 text-sm rounded-md',
-      md: 'px-4 py-2 text-base rounded-lg',
-      lg: 'px-6 py-3 text-lg rounded-lg',
-      touch: `px-4 py-3 text-base rounded-lg min-h-[${TOUCH_TARGET_MIN_SIZE}px]`,
+      sm: 'px-3 py-2 text-sm rounded-lg font-semibold',
+      md: 'px-4 py-2 text-base rounded-xl font-semibold',
+      lg: 'px-6 py-3 text-lg rounded-xl font-bold',
+      touch: `px-4 py-3 text-base rounded-xl font-semibold min-h-[${TOUCH_TARGET_MIN_SIZE}px] shadow-lg`,
     };
 
     const widthClasses = fullWidth ? 'w-full' : '';

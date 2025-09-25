@@ -89,21 +89,30 @@ const DeliveryTab: React.FC<DeliveryTabProps> = ({ shopId, shopName }) => {
   return (
     <div className="flex flex-col h-full w-full max-w-full overflow-x-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 bg-gray-50">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Delivery Entry</h3>
-        <p className="text-sm text-gray-600">
-          Enter quantities for each product. Totals update automatically.
-        </p>
+      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+        <div className="flex items-center space-x-3 mb-2">
+          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">🚚 Delivery Entry</h3>
+            <p className="text-sm text-gray-600">
+              Enter quantities for each product. Totals update automatically.
+            </p>
+          </div>
+        </div>
 
         {hasItems && (
-          <div className="mt-3 flex justify-end">
+          <div className="mt-4 flex justify-end">
             <Button
               variant="outline"
               size="sm"
               onClick={handleClearAll}
-              className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400"
+              className="text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 font-bold"
             >
-              Clear All
+              🗑️ Clear All
             </Button>
           </div>
         )}
@@ -122,14 +131,15 @@ const DeliveryTab: React.FC<DeliveryTabProps> = ({ shopId, shopName }) => {
       <LiveTotals isSticky />
 
       {/* Bottom action bar */}
-      <div className="border-t border-gray-200 bg-white p-4">
-        <div className="flex space-x-3">
+      <div className="border-t-2 border-primary-200 bg-gradient-to-r from-white to-gray-50 p-6 shadow-lg">
+        <div className="flex space-x-4">
           <Button
             variant="outline"
             size="touch"
             onClick={() => console.log('Save Draft')}
+            className="flex-1 h-16 text-lg font-bold"
           >
-            Save Draft
+            💾 Save Draft
           </Button>
           <Button
             variant="primary"
@@ -137,8 +147,9 @@ const DeliveryTab: React.FC<DeliveryTabProps> = ({ shopId, shopName }) => {
             onClick={handleSaveAndShare}
             disabled={!hasItems || isSaving}
             loading={isSaving}
+            className="flex-1 h-16 text-lg font-bold"
           >
-            {isSaving ? 'Saving...' : 'Save & Share'}
+            {isSaving ? '⏳ Saving...' : '💾 Save & Share'}
           </Button>
         </div>
       </div>
